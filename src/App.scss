@@ -1,0 +1,19 @@
+.app__container {
+  display: flex;
+  width: 100%;
+}
+.app_sideMenu {
+  height: calc(100% - 71.5px);
+  top: 70px;
+  position: fixed;
+  background: bisque;
+  overflow-y: scroll;
+  width: 15%;
+}
+.app__mainContent {
+  flex-basis: 85%;
+  background: aquamarine;
+  top: 70px;
+  position: relative;
+  left: 15%;
+}

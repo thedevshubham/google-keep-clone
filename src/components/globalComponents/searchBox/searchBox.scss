@@ -1,0 +1,27 @@
+.searchBox__container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: #f1f3f4;
+  border-radius: 10px;
+  padding: 7px;
+}
+
+.searchBox__input {
+  width: 100%;
+  overflow: hidden;
+}
+
+#searchInput {
+  width: 100%;
+  padding: 11px;
+  border-style: none;
+  outline: none;
+  background: #f1f3f4;
+  font: normal 16px Google Sans, Roboto, Helvetica, Arial, sans-serif;
+}
+
+button.searchBox__button {
+  border: none;
+  cursor: pointer;
+}

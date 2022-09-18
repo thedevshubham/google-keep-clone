@@ -1,0 +1,18 @@
+.combineComponent__container {
+  display: flex;
+  width: 100%;
+  position: absolute;
+}
+.combineComponent_sideMenu {
+  height: calc(100% - 71.5px);
+  top: 70px;
+  position: sticky;
+  // background: bisque;
+  overflow-y: scroll;
+}
+.combineComponent__mainContent {
+  // background: aquamarine;
+  top: 70px;
+  position: relative;
+  flex: 2;
+}

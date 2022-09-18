@@ -1,0 +1,30 @@
+.sideMenu__container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+a.menuItem {
+  display: inline-block;
+  padding: 10px 0;
+  text-decoration: none;
+  color: #202124;
+  letter-spacing: 0.01785714em;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.25rem;
+}
+
+.sideMenu__block {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 10px;
+}
+
+.sideMenu__block.activeLink {
+  border: 1px solid;
+  border-left: none;
+  border-radius: 0 25px 25px 0;
+  background-color: #fdf0c3;
+}

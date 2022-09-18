@@ -1,0 +1,83 @@
+.mainContent {
+  position: relative;
+  margin-left: 15pt;
+}
+
+.mainContent__inputContainer {
+  margin: 50px auto;
+  width: 50%;
+}
+
+.grid-container {
+  column-count: 4;
+  grid-gap: 15px;
+  grid-auto-flow: dense;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  margin: 100px 100px;
+}
+
+/* Single column display for phones */
+@media (max-width: 459px) {
+  .grid-container {
+    display: flex;
+    flex-direction: column;
+    margin: 2px 16px;
+  }
+}
+
+.grid__item {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  border: 1px solid transparent;
+  border-color: #e0e0e0;
+  background-color: #fff;
+  margin: 0 auto;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  margin-bottom: 10px;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.grid__item {
+  min-height: 60px;
+  padding: 10px;
+  overflow: visible;
+}
+
+.grid__item:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+button.checkButton {
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button.checkButton:hover {
+  background-color: grey;
+}
+
+.grid__item-action-check {
+  position: absolute;
+}
+
+.checkButton svg {
+  overflow: visible;
+}
+
+.grid-container.listView {
+  display: table;
+  margin: 0 auto;
+  width: 50%;
+}

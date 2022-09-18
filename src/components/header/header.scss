@@ -1,0 +1,94 @@
+.header {
+  position: fixed;
+  display: flex;
+  width: 100%;
+  opacity: 1;
+  background: transparent;
+  z-index: 100;
+}
+
+.header__container {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 8px;
+  align-items: center;
+  width: 100%;
+  border-bottom: 1px solid #dadce0;
+  background-color: white;
+}
+
+.header__drawer {
+  display: flex;
+  flex-basis: 10%;
+  justify-content: space-around;
+  align-items: center;
+}
+.header__searchSection {
+  width: 50%;
+}
+
+.header__accountSections {
+  border: solid transparent;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  padding: 10px;
+  overflow: hidden;
+  align-items: center;
+  background-color: #f9bd00;
+  text-align: center;
+  display: flex;
+}
+
+.header__title {
+  color: #5f6368;
+  opacity: 1;
+}
+
+.header__image {
+  display: flex;
+  align-items: center;
+}
+
+.header__toolsSection {
+  display: flex;
+  justify-content: space-between;
+  flex-basis: 10%;
+  align-items: center;
+}
+
+.header__imageSection {
+  display: flex;
+  margin: 0 10px;
+}
+
+.toolImg {
+  padding: 5px;
+}
+
+.actionItem {
+  cursor: pointer;
+}
+
+.header__title {
+  font-size: 22px;
+}
+
+input#searchInput::placeholder {
+  color: #6f7070;
+}
+
+.actionItem.drawer {
+  border-radius: 50%;
+  padding: 10px;
+}
+
+.actionItem.drawer:hover {
+  background: lightgray;
+}
+
+.header__container.onScroll {
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+}
