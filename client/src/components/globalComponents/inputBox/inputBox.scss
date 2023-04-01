@@ -30,13 +30,13 @@ textarea.inputBox__textArea {
   color: #212121;
   margin-top: 10px;
   cursor: pointer;
+  justify-content: end;
 }
 
 span.inputBox__action {
   padding: 10px;
   font-size: 13px;
   font-weight: 500;
-  margin-left: auto;
 }
 
 span.inputBox__action:hover {

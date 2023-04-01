@@ -6,7 +6,7 @@
 .combineComponent_sideMenu {
   height: calc(100% - 71.5px);
   top: 70px;
-  position: sticky;
+  position: relative;
   // background: bisque;
   overflow-y: scroll;
 }

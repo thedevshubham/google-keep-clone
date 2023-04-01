@@ -16,15 +16,6 @@
   margin: 100px 100px;
 }
 
-/* Single column display for phones */
-@media (max-width: 459px) {
-  .grid-container {
-    display: flex;
-    flex-direction: column;
-    margin: 2px 16px;
-  }
-}
-
 .grid__item {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   border-radius: 8px;
@@ -80,4 +71,18 @@ button.checkButton:hover {
   display: table;
   margin: 0 auto;
   width: 50%;
+}
+
+/* Single column display for phones */
+@media (max-width: 459px) {
+  .grid-container {
+    display: grid;
+    grid-gap: 20px;
+    margin: 2px 16px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .grid__item {
+    margin: 0;
+  }
 }
