@@ -6,6 +6,7 @@ export const LIST_NOTES = gql`
       id
       title
       content
+      color
     }
   }
 `;

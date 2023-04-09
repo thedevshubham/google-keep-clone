@@ -34,6 +34,12 @@
   min-height: 60px;
   padding: 10px;
   overflow: visible;
+  &.selected {
+    border: 2px solid black;
+    button.checkButton {
+      background-color: grey;
+    }
+  }
 }
 
 .grid__item:hover {
@@ -71,6 +77,52 @@ button.checkButton:hover {
   display: table;
   margin: 0 auto;
   width: 50%;
+}
+
+p.card-text {
+  letter-spacing: 0.01428571em;
+  font-family: Roboto, Arial, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.25rem;
+}
+
+.card-body {
+  padding: 4px 16px 12px;
+}
+
+.card-actions {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+span.card-action-item {
+  margin: 0 6px;
+}
+
+.card-action-item {
+  padding: 6px;
+  cursor: pointer;
+  svg {
+    height: 12px;
+    width: 12px;
+  }
+}
+
+.color-picker-popover {
+  position: absolute;
+}
+
+p.card-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 10;
+  // max-height: 10 * 1.2em;
+  -webkit-box-orient: vertical;
 }
 
 /* Single column display for phones */

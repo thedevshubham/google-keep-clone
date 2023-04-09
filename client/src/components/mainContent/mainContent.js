@@ -1,10 +1,10 @@
 import { useMutation, useQuery, useSubscription } from "@apollo/client";
 import React, { useEffect, useRef, useState } from "react";
 import { useNotesContext } from "../../context/notesContext.js/notesContextProvider";
-import { ReactComponent as CheckButton } from "../../images/check-circle-svgrepo-com.svg";
 import { CREATE_NOTE_MUTATION } from "../../queries/query_creation.graphql";
 import { LIST_NOTES } from "../../queries/query_list_notes.graphql";
 import { NOTES_SUBSCRIPTION } from "../../queries/query_subscription.graphql";
+import CardComponent from "../cardComponent/cardComponent";
 import InputBox from "../globalComponents/inputBox";
 import "./mainContent.scss";
 
@@ -14,12 +14,12 @@ const MainContent = () => {
 
   const textAreaRef = useRef();
   const inputBoxRef = useRef();
-  const [{ isGridView }] = useNotesContext();
-  const [content, setContent] = useState("");
-  const [title, setTitle] = useState("");
-  const [hovered, setHovered] = useState("");
-  const [showInputHeaderFooter, setShowInputHeaderFooter] = useState(false);
+  const [{ isGridView, selectedNotes }, dispatch] = useNotesContext();
+
   const [notes, setNotes] = useState([]);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [showInputHeaderFooter, setShowInputHeaderFooter] = useState(false);
 
   useEffect(() => {
     if (data?.notes?.length > 0) {
@@ -56,15 +56,9 @@ const MainContent = () => {
     }
   };
 
-  const handleMouseEnter = (item, ind) => {
-    setHovered(`${item}${ind}`);
-  };
-
-  const handleMouseLeave = () => setHovered("");
-
-  const onCheckBoxCllick = (item, index) => {
-    console.log(item, index);
-  };
+  useEffect(() => {
+    console.log(selectedNotes, "sel notes here");
+  }, [selectedNotes]);
 
   const onCloseInput = () => {
     setShowInputHeaderFooter(false);
@@ -122,29 +116,7 @@ const MainContent = () => {
         <div className="mainContent__cardContainer">
           <div className={`grid-container ${!isGridView && "listView"}`}>
             {notes?.map((item, index) => {
-              return (
-                <div
-                  className="grid__item"
-                  key={`${item}${index}`}
-                  onMouseEnter={() => handleMouseEnter(item, index)}
-                  onMouseLeave={() => handleMouseLeave()}
-                >
-                  {hovered === `${item}${index}` && (
-                    <div className="grid__item-action-check">
-                      <button
-                        className="checkButton"
-                        onClick={() => onCheckBoxCllick(item, index)}
-                      >
-                        <CheckButton />
-                      </button>
-                    </div>
-                  )}
-                  <div className="card-body">
-                    <h5 className="card-title">{item?.title}</h5>
-                    <p className="card-text">{item?.content}</p>
-                  </div>
-                </div>
-              );
+              return <CardComponent item={item} index={index} />;
             })}
           </div>
         </div>

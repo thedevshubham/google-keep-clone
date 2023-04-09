@@ -21,7 +21,6 @@
 
 .header__drawer {
   display: flex;
-  flex-basis: 10%;
   justify-content: space-around;
   align-items: center;
 }
@@ -62,10 +61,16 @@
 .header__imageSection {
   display: flex;
   margin: 0 10px;
+  gap: 10px;
 }
 
 .toolImg {
-  padding: 5px;
+  padding: 10px;
+  border-radius: 50%;
+}
+
+.toolImg:hover {
+  background: lightgray;
 }
 
 .actionItem {
@@ -90,5 +95,43 @@ input#searchInput::placeholder {
 }
 
 .header__container.onScroll {
-  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+}
+
+.header__selectedContainer {
+  color: #3c4043;
+  cursor: default;
+  font-family: "Google Sans", Roboto, Arial, sans-serif;
+  font-size: 1.375rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.75rem;
+  margin-left: 12px;
+  // padding: 13px 0;
+}
+
+.header__selectedContainer.left {
+  display: inline-flex;
+}
+
+.header__selectedContainer.right {
+  display: inline-flex;
+  margin: 0 20px;
+  gap: 20px;
+}
+
+.selected-close__button {
+  border: aliceblue;
+  background: none;
+  cursor: pointer;
+}
+
+.header__selected_action {
+  cursor: pointer;
+  border-radius: 50%;
+  padding: 10px;
+}
+
+.header__selected_action:hover {
+  background: lightgray;
 }

@@ -6,6 +6,7 @@ export const NOTES_SUBSCRIPTION = gql`
       id
       title
       content
+      color
     }
   }
 `;

@@ -1,6 +1,7 @@
 import {
   SET_DRAWER_STATE,
   SET_LIST_VIEW_STATE,
+  SET_SELECTED_NOTES,
   SET_SIDE_LINK_DATA,
 } from "../../config/contextConstants";
 
@@ -21,8 +22,13 @@ export const notesAction = (state, action) => {
         ...state,
         sideLinkData: {
           ...state.sideLinkData,
-          [action.key]: action.value
-        }
+          [action.key]: action.value,
+        },
+      };
+    case SET_SELECTED_NOTES:
+      return {
+        ...state,
+        selectedNotes: action.selectedNotes,
       };
     default:
       return state;
