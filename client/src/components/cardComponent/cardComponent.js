@@ -6,9 +6,12 @@ import { ReactComponent as ArchiveIcon } from "../../images/archive-svgrepo-com.
 import { ReactComponent as CheckButton } from "../../images/check-circle-svgrepo-com.svg";
 import { ReactComponent as ColorIcon } from "../../images/color-svgrepo-com.svg";
 import { ReactComponent as ReminderIcon } from "../../images/reminder-bell-svgrepo-com.svg";
+import { ReactComponent as ThreeDotsIcon } from "../../images/three-dots-vertical-svgrepo-com.svg";
 import { UPDATE_NOTE_MUTATION } from "../../queries/query_update_notes.graphql";
 import ColorPickerComponent from "../colorPickerComponent/colorPickerComponent";
 import "../mainContent/mainContent.scss";
+import Chip from "../globalComponents/chip/chip";
+import Dropdown from "../globalComponents/dropdown/dropdown";
 
 const CardComponent = ({ item, index }) => {
   const [updateNote] = useMutation(UPDATE_NOTE_MUTATION);
@@ -17,9 +20,11 @@ const CardComponent = ({ item, index }) => {
 
   const [hovered, setHovered] = useState("");
   const [showColorPicker, setShowColorPicker] = useState(false);
+  const [showMoreOptionsDropdown, setShowMoreOptionsDropdown] = useState(false);
 
   const handleSketchPicker = () => {
     setShowColorPicker(!showColorPicker);
+    setShowMoreOptionsDropdown(false);
   };
 
   const handleColorChangeComplete = (colorObj, item) => {
@@ -36,17 +41,22 @@ const CardComponent = ({ item, index }) => {
     });
   };
 
-  const handleColorPickerClose = () => {
-    setShowColorPicker(false);
-  };
-
   const handleMouseEnter = (id) => {
     setHovered(id);
   };
 
   const handleMouseLeave = () => {
     setHovered("");
-    handleColorPickerClose();
+    setShowColorPicker(false);
+  };
+
+  const handleMoreOptions = () => {
+    setShowMoreOptionsDropdown(!showMoreOptionsDropdown);
+    setShowColorPicker(false);
+  };
+
+  const onMoreOptionsDropdownClick = (dropdown, item) => {
+    console.log(dropdown, item);
   };
 
   const onCheckBoxClick = (item) => {
@@ -88,6 +98,12 @@ const CardComponent = ({ item, index }) => {
           <p className="card-text">{item?.content}</p>
         </div>
 
+        <div className="card-chip">
+          <Chip label={"Demo"} />
+          <Chip label={"Demo"} />
+          <Chip label={"Demo"} />
+        </div>
+
         <div className="card-actions">
           <div className="card-action-item">
             <ReminderIcon />
@@ -99,10 +115,18 @@ const CardComponent = ({ item, index }) => {
             <ColorIcon onClick={handleSketchPicker} />
             <ColorPickerComponent
               item={item}
-              hovered={hovered}
               showColorPicker={showColorPicker}
-              handleColorPickerClose={handleColorPickerClose}
+              setShowColorPicker={setShowColorPicker}
               handleColorChangeComplete={handleColorChangeComplete}
+            />
+          </div>
+          <div className="card-action-item">
+            <ThreeDotsIcon onClick={handleMoreOptions} />
+            <Dropdown
+              item={item}
+              showMoreOptionsDropdown={showMoreOptionsDropdown}
+              setShowMoreOptionsDropdown={setShowMoreOptionsDropdown}
+              onMoreOptionsDropdownClick={onMoreOptionsDropdownClick}
             />
           </div>
         </div>

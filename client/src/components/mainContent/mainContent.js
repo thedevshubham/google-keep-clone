@@ -116,7 +116,7 @@ const MainContent = () => {
         <div className="mainContent__cardContainer">
           <div className={`grid-container ${!isGridView && "listView"}`}>
             {notes?.map((item, index) => {
-              return <CardComponent item={item} index={index} />;
+              return <CardComponent item={item} index={index} key={item?.id} />;
             })}
           </div>
         </div>

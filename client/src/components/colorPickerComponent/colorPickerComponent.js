@@ -1,21 +1,20 @@
 import React from "react";
 import { CompactPicker } from "react-color";
-import "../mainContent/mainContent.scss";
+import "./colorPickerComponent.scss";
 
 const ColorPickerComponent = ({
   item,
-  hovered,
   showColorPicker,
-  handleColorPickerClose,
+  setShowColorPicker,
   handleColorChangeComplete,
 }) => {
+  const closeColorPicker = () => {
+    setShowColorPicker(false);
+  };
   return (
     <>
-      {hovered === item?.id && showColorPicker && (
-        <div
-          className="color-picker-popover"
-          onMouseLeave={handleColorPickerClose}
-        >
+      {showColorPicker && (
+        <div className="color-picker-popover" onMouseLeave={closeColorPicker}>
           <CompactPicker
             color={item.color}
             onChange={(color) => handleColorChangeComplete(color, item)}
