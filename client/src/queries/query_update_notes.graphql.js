@@ -6,12 +6,20 @@ export const UPDATE_NOTE_MUTATION = gql`
     $title: String
     $content: String
     $color: String
+    $label: [String]
   ) {
-    updateNote(id: $id, title: $title, content: $content, color: $color) {
+    updateNote(
+      id: $id
+      title: $title
+      content: $content
+      color: $color
+      label: $label
+    ) {
       id
       title
       content
       color
+      label
     }
   }
 `;

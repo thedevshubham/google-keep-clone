@@ -42,7 +42,6 @@ const SideMenu = () => {
 
   const handleSideLink = (link = "", title = "") => {
     let path = window.location.pathname;
-    console.log(path);
     dispatch({
       type: SET_SIDE_LINK_DATA,
       key: "activeLink",

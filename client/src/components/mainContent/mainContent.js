@@ -3,41 +3,67 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNotesContext } from "../../context/notesContext.js/notesContextProvider";
 import { CREATE_NOTE_MUTATION } from "../../queries/query_creation.graphql";
 import { LIST_NOTES } from "../../queries/query_list_notes.graphql";
-import { NOTES_SUBSCRIPTION } from "../../queries/query_subscription.graphql";
+import {
+  NEW_LABEL_ADDED,
+  NOTE_CREATED,
+  NOTE_UPDATED,
+} from "../../queries/query_subscription.graphql";
 import CardComponent from "../cardComponent/cardComponent";
 import InputBox from "../globalComponents/inputBox";
 import "./mainContent.scss";
+import { LIST_LABELS } from "../../queries/query_labels_list.graphql";
 
 const MainContent = () => {
   const [createNote] = useMutation(CREATE_NOTE_MUTATION);
-  const { data } = useQuery(LIST_NOTES);
+  const { data: notesFromQuery } = useQuery(LIST_NOTES);
+  const { data: labelsFromQuery } = useQuery(LIST_LABELS);
 
   const textAreaRef = useRef();
   const inputBoxRef = useRef();
   const [{ isGridView, selectedNotes }, dispatch] = useNotesContext();
 
   const [notes, setNotes] = useState([]);
+  const [labels, setLabels] = useState([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [showInputHeaderFooter, setShowInputHeaderFooter] = useState(false);
 
-  useEffect(() => {
-    if (data?.notes?.length > 0) {
-      setNotes(data?.notes);
-    }
-  }, [data]);
-
-  // Creating subscription for blogs //
-  useSubscription(NOTES_SUBSCRIPTION, {
+  useSubscription(NOTE_CREATED, {
     onSubscriptionData: ({ subscriptionData }) => {
-      // This function will get triggered one a publish event is being initited by the server
-      // when new blog is being added
-      if (subscriptionData?.data?.noteCreated) {
-        // we are updating the state of blogs
-        setNotes([...notes, subscriptionData?.data?.noteCreated]);
-      }
+      const newNote = subscriptionData.data.noteCreated;
+      setNotes((prevNotes) => [...prevNotes, newNote]);
     },
   });
+
+  useSubscription(NOTE_UPDATED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      const updatedNote = subscriptionData.data.noteUpdated;
+      setNotes((prevNotes) =>
+        prevNotes.map((note) =>
+          note.id === updatedNote.id ? updatedNote : note
+        )
+      );
+    },
+  });
+
+  useSubscription(NEW_LABEL_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      const newLabel = subscriptionData.data.labelAdded;
+      setLabels([...newLabel]);
+    },
+  });
+
+  useEffect(() => {
+    if (notesFromQuery?.notes?.length > 0) {
+      setNotes(notesFromQuery?.notes);
+    }
+  }, [notesFromQuery]);
+
+  useEffect(() => {
+    if (labelsFromQuery?.getLabels?.length > 0) {
+      setLabels(labelsFromQuery?.getLabels);
+    }
+  }, [labelsFromQuery]);
 
   useEffect(() => {
     textAreaRef?.current?.focus();
@@ -56,17 +82,13 @@ const MainContent = () => {
     }
   };
 
-  useEffect(() => {
-    console.log(selectedNotes, "sel notes here");
-  }, [selectedNotes]);
+  useEffect(() => {}, [selectedNotes]);
 
   const onCloseInput = () => {
     setShowInputHeaderFooter(false);
   };
 
   const onSaveNotes = () => {
-    console.log("title", title);
-    console.log("content", content);
     createNote({
       variables: { title, content },
       optimisticResponse: {
@@ -76,6 +98,8 @@ const MainContent = () => {
           id: Math.round(Math.random() * -1000000),
           title: title,
           content: content,
+          color: "#ffffff",
+          label: [],
         },
       },
     });
@@ -116,7 +140,14 @@ const MainContent = () => {
         <div className="mainContent__cardContainer">
           <div className={`grid-container ${!isGridView && "listView"}`}>
             {notes?.map((item, index) => {
-              return <CardComponent item={item} index={index} key={item?.id} />;
+              return (
+                <CardComponent
+                  item={item}
+                  index={index}
+                  key={item?.id}
+                  labelsFromQuery={labels}
+                />
+              );
             })}
           </div>
         </div>

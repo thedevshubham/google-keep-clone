@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import "./dropdown.scss";
 
 const Dropdown = ({
@@ -6,6 +7,22 @@ const Dropdown = ({
   onMoreOptionsDropdownClick,
   setShowMoreOptionsDropdown,
 }) => {
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowMoreOptionsDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownRef]);
+
   const dropdownItems = [
     {
       label: "Add label",
@@ -13,12 +30,8 @@ const Dropdown = ({
     },
   ];
 
-  const closeDropdown = () => {
-    setShowMoreOptionsDropdown(false);
-  };
-
   return (
-    <div className="dropdown" onMouseLeave={closeDropdown}>
+    <div className="dropdown" ref={dropdownRef}>
       {showMoreOptionsDropdown &&
         dropdownItems.map((dropdownVal) => (
           <div

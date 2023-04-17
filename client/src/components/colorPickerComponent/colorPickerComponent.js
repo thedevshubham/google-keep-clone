@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { CompactPicker } from "react-color";
 import "./colorPickerComponent.scss";
 
@@ -8,13 +8,26 @@ const ColorPickerComponent = ({
   setShowColorPicker,
   handleColorChangeComplete,
 }) => {
-  const closeColorPicker = () => {
-    setShowColorPicker(false);
-  };
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowColorPicker(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownRef]);
+
   return (
     <>
       {showColorPicker && (
-        <div className="color-picker-popover" onMouseLeave={closeColorPicker}>
+        <div className="color-picker-popover" ref={dropdownRef}>
           <CompactPicker
             color={item.color}
             onChange={(color) => handleColorChangeComplete(color, item)}

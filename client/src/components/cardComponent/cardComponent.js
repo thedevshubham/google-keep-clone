@@ -12,15 +12,18 @@ import ColorPickerComponent from "../colorPickerComponent/colorPickerComponent";
 import "../mainContent/mainContent.scss";
 import Chip from "../globalComponents/chip/chip";
 import Dropdown from "../globalComponents/dropdown/dropdown";
+import AddLabelDropdown from "../globalComponents/addLabelDropdown/addLabelDropdown";
 
-const CardComponent = ({ item, index }) => {
+const CardComponent = ({ item, index, labelsFromQuery }) => {
   const [updateNote] = useMutation(UPDATE_NOTE_MUTATION);
 
   const [{ selectedNotes }, dispatch] = useNotesContext();
 
   const [hovered, setHovered] = useState("");
+  const [label, setLabel] = useState("");
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [showMoreOptionsDropdown, setShowMoreOptionsDropdown] = useState(false);
+  const [isLabelDropdownOpen, setIsLabelDropdownOpen] = useState(false);
 
   const handleSketchPicker = () => {
     setShowColorPicker(!showColorPicker);
@@ -29,16 +32,41 @@ const CardComponent = ({ item, index }) => {
 
   const handleColorChangeComplete = (colorObj, item) => {
     updateNote({
-      variables: { id: item.id, color: colorObj.hex },
+      variables: {
+        id: item.id,
+        color: colorObj.hex,
+      },
       optimisticResponse: {
         __typename: "Mutation",
         updateNote: {
           __typename: "Note",
           id: item.id,
           color: colorObj.hex,
+          content: item.content,
+          title: item.title,
+          label: item.label.length > 0 ? [...item.label] : [],
         },
       },
     });
+  };
+
+  const handleCreateNewLabel = () => {
+    updateNote({
+      variables: { id: item.id, label: [label] },
+      optimisticResponse: {
+        __typename: "Mutation",
+        updateNote: {
+          __typename: "Note",
+          id: item.id,
+          color: item.color,
+          content: item.content,
+          title: item.title,
+          label: item.label.length > 0 ? [...item.label, label] : [label],
+        },
+      },
+    });
+
+    setLabel("");
   };
 
   const handleMouseEnter = (id) => {
@@ -47,16 +75,18 @@ const CardComponent = ({ item, index }) => {
 
   const handleMouseLeave = () => {
     setHovered("");
-    setShowColorPicker(false);
   };
 
   const handleMoreOptions = () => {
     setShowMoreOptionsDropdown(!showMoreOptionsDropdown);
-    setShowColorPicker(false);
   };
 
   const onMoreOptionsDropdownClick = (dropdown, item) => {
-    console.log(dropdown, item);
+    setIsLabelDropdownOpen(true);
+  };
+
+  const handleLabelChange = (e) => {
+    setLabel(e.target.value);
   };
 
   const onCheckBoxClick = (item) => {
@@ -74,64 +104,67 @@ const CardComponent = ({ item, index }) => {
   };
 
   return (
-    <>
-      <div
-        className={`grid__item ${selectedNotes[item?.id] ? `selected` : ``}`}
-        style={{ backgroundColor: item?.color }}
-        key={`${item}${index}`}
-        onMouseEnter={() => handleMouseEnter(item?.id)}
-        onMouseLeave={handleMouseLeave}
-      >
-        {(hovered === item?.id || selectedNotes[item?.id]) && (
-          <div className="grid__item-action-check">
-            <button
-              className="checkButton"
-              onClick={() => onCheckBoxClick(item)}
-            >
-              <CheckButton />
-            </button>
-          </div>
-        )}
-
-        <div className="card-body">
-          <h5 className="card-title">{item?.title}</h5>
-          <p className="card-text">{item?.content}</p>
+    <div
+      className={`grid__item ${selectedNotes[item?.id] ? `selected` : ``}`}
+      style={{ backgroundColor: item?.color }}
+      key={`${item.id}${index}`}
+      onMouseEnter={() => handleMouseEnter(item?.id)}
+      onMouseLeave={handleMouseLeave}
+    >
+      {(hovered === item?.id || selectedNotes[item?.id]) && (
+        <div className="grid__item-action-check">
+          <button className="checkButton" onClick={() => onCheckBoxClick(item)}>
+            <CheckButton />
+          </button>
         </div>
+      )}
 
-        <div className="card-chip">
-          <Chip label={"Demo"} />
-          <Chip label={"Demo"} />
-          <Chip label={"Demo"} />
+      <div className="card-body">
+        <h5 className="card-title">{item?.title}</h5>
+        <p className="card-text">{item?.content}</p>
+      </div>
+
+      <div className="card-chip">
+        {item?.label?.map((labelItem) => (
+          <Chip label={labelItem} key={labelItem} />
+        ))}
+      </div>
+
+      <div className="card-actions">
+        <div className="card-action-item">
+          <ReminderIcon />
         </div>
-
-        <div className="card-actions">
-          <div className="card-action-item">
-            <ReminderIcon />
-          </div>
-          <div className="card-action-item">
-            <ArchiveIcon />
-          </div>
-          <div className="card-action-item">
-            <ColorIcon onClick={handleSketchPicker} />
-            <ColorPickerComponent
-              item={item}
-              showColorPicker={showColorPicker}
-              setShowColorPicker={setShowColorPicker}
-              handleColorChangeComplete={handleColorChangeComplete}
-            />
-          </div>
-          <div className="card-action-item">
-            <ThreeDotsIcon onClick={handleMoreOptions} />
-            <Dropdown
-              item={item}
-              showMoreOptionsDropdown={showMoreOptionsDropdown}
-              setShowMoreOptionsDropdown={setShowMoreOptionsDropdown}
-              onMoreOptionsDropdownClick={onMoreOptionsDropdownClick}
-            />
-          </div>
+        <div className="card-action-item">
+          <ArchiveIcon />
+        </div>
+        <div className="card-action-item">
+          <ColorIcon onClick={handleSketchPicker} />
+          <ColorPickerComponent
+            item={item}
+            showColorPicker={showColorPicker}
+            setShowColorPicker={setShowColorPicker}
+            handleColorChangeComplete={handleColorChangeComplete}
+          />
+        </div>
+        <div className="card-action-item">
+          <ThreeDotsIcon onClick={handleMoreOptions} />
+          <Dropdown
+            item={item}
+            showMoreOptionsDropdown={showMoreOptionsDropdown}
+            setShowMoreOptionsDropdown={setShowMoreOptionsDropdown}
+            onMoreOptionsDropdownClick={onMoreOptionsDropdownClick}
+          />
+          <AddLabelDropdown
+            isOpen={isLabelDropdownOpen}
+            setIsLabelDropdownOpen={setIsLabelDropdownOpen}
+            labelsList={labelsFromQuery}
+            handleCreateNewLabel={handleCreateNewLabel}
+            handleLabelChange={handleLabelChange}
+            newLabel={label}
+          />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

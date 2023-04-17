@@ -1,0 +1,58 @@
+.google-keep-dropdown {
+  position: absolute;
+  padding: 5px 0px;
+  background-color: #fff;
+  border-width: 0;
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.302),
+    0 2px 6px 2px rgba(60, 64, 67, 0.149);
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  z-index: 5003;
+}
+
+.create-label-input {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 3px;
+}
+
+.create-label-button {
+  background-color: #f9f9f9;
+  border: none;
+  color: #333;
+  padding: 5px 5px;
+  margin-left: 1px;
+  cursor: pointer;
+}
+
+.create-label-button:hover {
+  background-color: #ccc;
+}
+
+.note-item {
+  padding: 5px 12px;
+}
+
+.note-item:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+svg.create-label-button {
+  vertical-align: middle;
+}
+
+input#text::placeholder {
+  color: #6f7070;
+}
+
+.create-label-container {
+  display: flex;
+  flex-direction: row;
+  padding: 5px;
+}
+
+.notes-list {
+  max-height: 122px;
+  overflow: scroll;
+}
