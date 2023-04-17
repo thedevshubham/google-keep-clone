@@ -42,6 +42,8 @@ const typeDefs = gql`
       color: String
       label: [String]
     ): Note
+
+    deleteLabel(id: ID!, label: String): Note
   }
 
   type Subscription {
@@ -100,13 +102,29 @@ const resolvers = {
       note.title = args.title || note.title;
       note.content = args.content || note.content;
       note.color = args.color || note.color;
-      if (args?.label?.length === 1) {
-        note.label.push(args.label[0]);
-        if (labels.indexOf(args.label[0]) === -1) {
-          labels.push(args.label[0]);
+      if (args?.label?.length > 0) {
+        const notesUniqueLabel = args.label.filter(
+          (item) => !note.label.includes(item)
+        );
+        const labelUniquelabels = args.label.filter(
+          (item) => !labels.includes(item)
+        );
+        if (notesUniqueLabel.length > 0) {
+          note.label.push(...notesUniqueLabel);
+        }
+        if (labelUniquelabels.length > 0) {
+          labels.push(...labelUniquelabels);
           pubsub.publish("NEW_LABEL_ADDED", { labelAdded: labels });
         }
       }
+      pubsub.publish("NOTE_UPDATED", { noteUpdated: note });
+      return note;
+    },
+
+    deleteLabel: (parent, args) => {
+      const note = notes.find((note) => note.id === args.id);
+      let updatedLabels = note.label.filter((lbl) => lbl !== args.label);
+      note.label = [...updatedLabels];
       pubsub.publish("NOTE_UPDATED", { noteUpdated: note });
       return note;
     },

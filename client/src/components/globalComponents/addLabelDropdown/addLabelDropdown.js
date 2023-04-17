@@ -8,6 +8,8 @@ function AddLabelDropdown({
   newLabel,
   labelsList,
   setIsLabelDropdownOpen,
+  handleLabelSelection,
+  selectedLabels,
 }) {
   const dropdownRef = useRef(null);
 
@@ -32,9 +34,16 @@ function AddLabelDropdown({
           <div className="notes-list">
             {labelsList.map((label) => {
               return (
-                <div className="note-item" key={label}>
+                <label htmlFor={label} className="note-item" key={label}>
+                  <input
+                    type="checkbox"
+                    id={label}
+                    value={label}
+                    checked={selectedLabels.includes(label)}
+                    onChange={handleLabelSelection}
+                  />
                   {label}
-                </div>
+                </label>
               );
             })}
           </div>
@@ -43,7 +52,7 @@ function AddLabelDropdown({
               type="text"
               id="text"
               className="create-label-input"
-              placeholder="Create new label"
+              placeholder="create new label..."
               value={newLabel}
               onChange={handleLabelChange}
             />

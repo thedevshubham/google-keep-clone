@@ -15,6 +15,7 @@
   padding: 10px;
   border: none;
   border-radius: 3px;
+  background: #f1f3f4;
 }
 
 .create-label-button {
@@ -31,6 +32,8 @@
 }
 
 .note-item {
+  display: block;
+  cursor: pointer;
   padding: 5px 12px;
 }
 

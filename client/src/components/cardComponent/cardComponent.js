@@ -7,15 +7,17 @@ import { ReactComponent as CheckButton } from "../../images/check-circle-svgrepo
 import { ReactComponent as ColorIcon } from "../../images/color-svgrepo-com.svg";
 import { ReactComponent as ReminderIcon } from "../../images/reminder-bell-svgrepo-com.svg";
 import { ReactComponent as ThreeDotsIcon } from "../../images/three-dots-vertical-svgrepo-com.svg";
+import { DELETE_LABEL } from "../../queries/query_delete_label.graphql";
 import { UPDATE_NOTE_MUTATION } from "../../queries/query_update_notes.graphql";
 import ColorPickerComponent from "../colorPickerComponent/colorPickerComponent";
-import "../mainContent/mainContent.scss";
+import AddLabelDropdown from "../globalComponents/addLabelDropdown/addLabelDropdown";
 import Chip from "../globalComponents/chip/chip";
 import Dropdown from "../globalComponents/dropdown/dropdown";
-import AddLabelDropdown from "../globalComponents/addLabelDropdown/addLabelDropdown";
+import "../mainContent/mainContent.scss";
 
 const CardComponent = ({ item, index, labelsFromQuery }) => {
   const [updateNote] = useMutation(UPDATE_NOTE_MUTATION);
+  const [deleteLabel] = useMutation(DELETE_LABEL);
 
   const [{ selectedNotes }, dispatch] = useNotesContext();
 
@@ -51,8 +53,12 @@ const CardComponent = ({ item, index, labelsFromQuery }) => {
   };
 
   const handleCreateNewLabel = () => {
+    const trimmedLabel = label.trim();
+    if (!trimmedLabel) {
+      return;
+    }
     updateNote({
-      variables: { id: item.id, label: [label] },
+      variables: { id: item.id, label: [trimmedLabel] },
       optimisticResponse: {
         __typename: "Mutation",
         updateNote: {
@@ -61,7 +67,10 @@ const CardComponent = ({ item, index, labelsFromQuery }) => {
           color: item.color,
           content: item.content,
           title: item.title,
-          label: item.label.length > 0 ? [...item.label, label] : [label],
+          label:
+            item.label.length > 0
+              ? [...item.label, trimmedLabel]
+              : [trimmedLabel],
         },
       },
     });
@@ -87,6 +96,39 @@ const CardComponent = ({ item, index, labelsFromQuery }) => {
 
   const handleLabelChange = (e) => {
     setLabel(e.target.value);
+  };
+
+  const handleLabelSelection = (event) => {
+    const { value, checked } = event.target;
+    console.log(value, checked, "I am here");
+    if (!checked) {
+      deleteLabel({
+        variables: { id: item.id, label: value },
+        optimisticResponse: {
+          __typename: "Mutation",
+          updateNote: {
+            __typename: "Note",
+            id: item.id,
+            label: value,
+          },
+        },
+      });
+    } else {
+      updateNote({
+        variables: { id: item.id, label: [value] },
+        optimisticResponse: {
+          __typename: "Mutation",
+          updateNote: {
+            __typename: "Note",
+            id: item.id,
+            color: item.color,
+            content: item.content,
+            title: item.title,
+            label: [value],
+          },
+        },
+      });
+    }
   };
 
   const onCheckBoxClick = (item) => {
@@ -161,6 +203,8 @@ const CardComponent = ({ item, index, labelsFromQuery }) => {
             handleCreateNewLabel={handleCreateNewLabel}
             handleLabelChange={handleLabelChange}
             newLabel={label}
+            handleLabelSelection={handleLabelSelection}
+            selectedLabels={item.label}
           />
         </div>
       </div>
