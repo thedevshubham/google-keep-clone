@@ -1,13 +1,11 @@
 import gql from "graphql-tag";
 
-export const LIST_NOTES = gql`
-  query notes {
-    notes {
+export const PIN_NOTES = gql`
+  mutation pinNotes($id: [ID]) {
+    pinNotes(id: $id) {
       id
       title
       content
-      color
-      label
       isPinned
     }
   }

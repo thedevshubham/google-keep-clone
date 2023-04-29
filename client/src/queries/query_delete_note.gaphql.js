@@ -1,8 +1,8 @@
 import gql from "graphql-tag";
 
-export const LIST_NOTES = gql`
-  query notes {
-    notes {
+export const DELETE_NOTE = gql`
+  mutation deleteNote($id: ID!) {
+    deleteNote(id: $id) {
       id
       title
       content

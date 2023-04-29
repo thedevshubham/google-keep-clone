@@ -7,6 +7,7 @@ export const UPDATE_NOTE_MUTATION = gql`
     $content: String
     $color: String
     $label: [String]
+    $isPinned: Boolean
   ) {
     updateNote(
       id: $id
@@ -14,12 +15,14 @@ export const UPDATE_NOTE_MUTATION = gql`
       content: $content
       color: $color
       label: $label
+      isPinned: $isPinned
     ) {
       id
       title
       content
       color
       label
+      isPinned
     }
   }
 `;

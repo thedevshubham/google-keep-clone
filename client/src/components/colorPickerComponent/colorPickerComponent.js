@@ -30,7 +30,7 @@ const ColorPickerComponent = ({
         <div className="color-picker-popover" ref={dropdownRef}>
           <CompactPicker
             color={item.color}
-            onChange={(color) => handleColorChangeComplete(color, item)}
+            onChange={(color, e) => handleColorChangeComplete(color, item, e)}
           />
         </div>
       )}

@@ -1,8 +1,8 @@
 import gql from "graphql-tag";
 
-export const LIST_NOTES = gql`
-  query notes {
-    notes {
+export const LIST_TRASH_NOTES = gql`
+  query trashNotes {
+    trashNotes {
       id
       title
       content

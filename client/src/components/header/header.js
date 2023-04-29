@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import {
   SET_DRAWER_STATE,
   SET_LIST_VIEW_STATE,
+  SET_NOTES,
   SET_SELECTED_NOTES,
+  SET_TRASH_NOTES,
 } from "../../config/contextConstants";
 import { useNotesContext } from "../../context/notesContext.js/notesContextProvider";
 import { ReactComponent as ArchiveIcon } from "../../images/archive-svgrepo-com.svg";
@@ -15,13 +17,23 @@ import { ReactComponent as ReminderIcon } from "../../images/reminder-bell-svgre
 import { ReactComponent as Settings } from "../../images/settings-svgrepo-com.svg";
 import SearchBox from "../globalComponents/searchBox";
 import "./header.scss";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import { SEARCH_NOTES } from "../../queries/query_search_notes.graphql";
+import { LIST_NOTES } from "../../queries/query_list_notes.graphql";
+import { PIN_NOTES } from "../../queries/query_pin_notes.graphql";
+import { LIST_TRASH_NOTES } from "../../queries/query_list_trash_notes.graphql";
 
 const Header = () => {
   const [
     { isGridView, isDrawerClicked, sideLinkData, selectedNotes },
     dispatch,
   ] = useNotesContext();
+  const [searchValue, setSearchValue] = useState("");
   const [isScroll, setIsScroll] = useState(false);
+  const [pinNotes] = useMutation(PIN_NOTES);
+  const { data: notesFromQuery } = useQuery(LIST_NOTES);
+  const { data: trashNotesFromQuery } = useQuery(LIST_TRASH_NOTES);
+  const [getNotes, { data }] = useLazyQuery(SEARCH_NOTES);
   const selectedNotesLength = Object.keys(selectedNotes)?.length || 0;
 
   useEffect(() => {
@@ -30,6 +42,50 @@ const Header = () => {
       window.removeEventListener("scroll", handleScrollClassOnHeader);
     };
   }, []);
+
+  useEffect(() => {
+    let debounce;
+    if (searchValue) {
+      debounce = setTimeout(() => {
+        getNotes({
+          variables: {
+            term: searchValue,
+            isTrash: window.location.pathname === "/Trash",
+          },
+        });
+      }, 500);
+    }
+
+    return () => {
+      if (debounce) {
+        clearTimeout(debounce);
+      }
+    };
+  }, [searchValue, getNotes]);
+
+  useEffect(() => {
+    if (data) {
+      if (window.location.pathname === "/Trash") {
+        dispatch({ type: SET_TRASH_NOTES, trashNotes: data.searchNotes });
+      } else {
+        dispatch({ type: SET_NOTES, notes: data.searchNotes });
+      }
+    }
+  }, [data, dispatch]);
+
+  useEffect(() => {
+    if (!searchValue) {
+      if (notesFromQuery?.notes?.length > 0) {
+        dispatch({ type: SET_NOTES, notes: notesFromQuery?.notes });
+      }
+      if (trashNotesFromQuery?.trashNotes?.length > 0) {
+        dispatch({
+          type: SET_TRASH_NOTES,
+          trashNotes: trashNotesFromQuery?.trashNotes,
+        });
+      }
+    }
+  }, [searchValue]);
 
   const handleScrollClassOnHeader = () => {
     let activeClass = true;
@@ -54,6 +110,23 @@ const Header = () => {
     });
   };
 
+  const onSearchClick = () => {};
+
+  const onCloseClick = () => {
+    setSearchValue("");
+  };
+
+  const handleSearch = (e) => {
+    setSearchValue(e.target.value);
+  };
+
+  const handlePinNotes = () => {
+    let ids = Object.keys(selectedNotes);
+    pinNotes({
+      variables: { id: ids },
+    });
+  };
+
   const renderHeader = () => {
     return (
       <>
@@ -72,7 +145,14 @@ const Header = () => {
           </div>
         </div>
         <div className="header__searchSection">
-          <SearchBox placeHolder={"Search"} />
+          <SearchBox
+            placeHolder={"Search"}
+            onSearchClick={onSearchClick}
+            onCloseClick={onCloseClick}
+            handleSearch={handleSearch}
+            searchValue={searchValue}
+            setSearchValue={setSearchValue}
+          />
         </div>
         <div className="header__toolsSection">
           <div className="header__imageSection">
@@ -82,12 +162,6 @@ const Header = () => {
             >
               {!isGridView ? <GridView /> : <ListView />}
             </div>
-            <div className="header__toosSection-settings toolImg actionItem">
-              <Settings />
-            </div>
-          </div>
-          <div className="header__accountSections actionItem">
-            <span className="header__account-accordian">S</span>
           </div>
         </div>
       </>
@@ -105,13 +179,7 @@ const Header = () => {
         </div>
         <div className="header__selectedContainer right">
           <div className="header__selected_action">
-            <PinIcon />
-          </div>
-          <div className="header__selected_action">
-            <ReminderIcon />
-          </div>
-          <div className="header__selected_action">
-            <ArchiveIcon />
+            <PinIcon onClick={handlePinNotes} />
           </div>
         </div>
       </>

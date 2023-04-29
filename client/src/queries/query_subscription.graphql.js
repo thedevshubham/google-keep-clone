@@ -8,6 +8,7 @@ export const NOTE_CREATED = gql`
       content
       color
       label
+      isPinned
     }
   }
 `;
@@ -20,6 +21,33 @@ export const NOTE_UPDATED = gql`
       content
       color
       label
+      isPinned
+    }
+  }
+`;
+
+export const NOTE_DELETED = gql`
+  subscription NoteDeleted {
+    noteDeleted {
+      id
+      title
+      content
+      color
+      label
+      isPinned
+    }
+  }
+`;
+
+export const TRASH_NOTE_UPDATED = gql`
+  subscription TrashUpdated {
+    trashUpdated {
+      id
+      title
+      content
+      color
+      label
+      isPinned
     }
   }
 `;

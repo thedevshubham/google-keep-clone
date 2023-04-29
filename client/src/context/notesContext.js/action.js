@@ -1,8 +1,10 @@
 import {
   SET_DRAWER_STATE,
   SET_LIST_VIEW_STATE,
+  SET_NOTES,
   SET_SELECTED_NOTES,
   SET_SIDE_LINK_DATA,
+  SET_TRASH_NOTES,
 } from "../../config/contextConstants";
 
 export const notesAction = (state, action) => {
@@ -29,6 +31,16 @@ export const notesAction = (state, action) => {
       return {
         ...state,
         selectedNotes: action.selectedNotes,
+      };
+    case SET_NOTES:
+      return {
+        ...state,
+        notes: action.notes,
+      };
+    case SET_TRASH_NOTES:
+      return {
+        ...state,
+        trashNotes: action.trashNotes,
       };
     default:
       return state;

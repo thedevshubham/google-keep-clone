@@ -8,6 +8,7 @@ export const DELETE_LABEL = gql`
       content
       color
       label
+      isPinned
     }
   }
 `;

@@ -5,4 +5,6 @@ export const notesInitialState = {
     activeLink: "",
   },
   selectedNotes: {},
+  notes: [],
+  trashNotes: [],
 };

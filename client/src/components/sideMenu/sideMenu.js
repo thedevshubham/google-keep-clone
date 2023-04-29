@@ -17,18 +17,6 @@ const sideBarList = [
     link: "/reminders",
     image: <RemindersIcon />,
   },
-  {
-    type: "edit",
-    name: "Edit Label",
-    link: "/editLabel",
-    image: <EditLabelIcon />,
-  },
-  {
-    type: "archive",
-    name: "Archive",
-    link: "/archive",
-    image: <ArchiveIcon />,
-  },
   { type: "trash", name: "Trash", link: "/trash", image: <TrashIcon /> },
 ];
 

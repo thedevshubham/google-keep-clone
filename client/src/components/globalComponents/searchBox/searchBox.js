@@ -3,17 +3,14 @@ import { ReactComponent as SearchIcon } from "../../../images/search-icon.svg";
 import { ReactComponent as CloseIcon } from "../../../images/close-icon.svg";
 import "./searchBox.scss";
 
-const SearchBox = ({ placeHolder }) => {
-  const [searchValue, setSearchValue] = useState("");
-
-  const onSearchClick = () => {};
-
-  const onCloseClick = () => {};
-
-  const handleSearch = (e) => {
-    setSearchValue(e.target.value);
-  };
-
+const SearchBox = ({
+  placeHolder,
+  onSearchClick,
+  onCloseClick,
+  handleSearch,
+  searchValue,
+  setSearchValue,
+}) => {
   return (
     <div className="searchBox__container">
       <div className="searchBox__searchButton">
