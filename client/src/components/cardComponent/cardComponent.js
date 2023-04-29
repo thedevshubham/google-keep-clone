@@ -2,21 +2,21 @@ import { useMutation } from "@apollo/client";
 import React, { useState } from "react";
 import { SET_SELECTED_NOTES } from "../../config/contextConstants";
 import { useNotesContext } from "../../context/notesContext.js/notesContextProvider";
-import { ReactComponent as ArchiveIcon } from "../../images/archive-svgrepo-com.svg";
 import { ReactComponent as CheckButton } from "../../images/check-circle-svgrepo-com.svg";
 import { ReactComponent as ColorIcon } from "../../images/color-svgrepo-com.svg";
-import { ReactComponent as ReminderIcon } from "../../images/reminder-bell-svgrepo-com.svg";
 import { ReactComponent as PinIcon } from "../../images/pin-svgrepo-com.svg";
-import { ReactComponent as TrashIcon } from "../../images/trash-svgrepo-com.svg";
+import { ReactComponent as ReminderIcon } from "../../images/reminder-bell-svgrepo-com.svg";
 import { ReactComponent as ThreeDotsIcon } from "../../images/three-dots-vertical-svgrepo-com.svg";
+import { ReactComponent as TrashIcon } from "../../images/trash-svgrepo-com.svg";
 import { DELETE_LABEL } from "../../queries/query_delete_label.graphql";
+import { DELETE_NOTE } from "../../queries/query_delete_note.gaphql";
 import { UPDATE_NOTE_MUTATION } from "../../queries/query_update_notes.graphql";
 import ColorPickerComponent from "../colorPickerComponent/colorPickerComponent";
 import AddLabelDropdown from "../globalComponents/addLabelDropdown/addLabelDropdown";
 import Chip from "../globalComponents/chip/chip";
+import DatePicker from "../globalComponents/datePicker/datePicker";
 import Dropdown from "../globalComponents/dropdown/dropdown";
 import "../mainContent/mainContent.scss";
-import { DELETE_NOTE } from "../../queries/query_delete_note.gaphql";
 
 const CardComponent = ({
   item,
@@ -33,6 +33,8 @@ const CardComponent = ({
 
   const [hovered, setHovered] = useState("");
   const [label, setLabel] = useState("");
+  const [isOpenDatePicker, setIsOpenDatePicker] = useState(false);
+  const [dateTimeVal, dateTimeChange] = useState(new Date());
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [showMoreOptionsDropdown, setShowMoreOptionsDropdown] = useState(false);
   const [isLabelDropdownOpen, setIsLabelDropdownOpen] = useState(false);
@@ -41,6 +43,7 @@ const CardComponent = ({
     e.stopPropagation();
     setShowColorPicker(!showColorPicker);
     setShowMoreOptionsDropdown(false);
+    setIsOpenDatePicker(false);
   };
 
   const handleColorChangeComplete = (colorObj, item, e) => {
@@ -126,10 +129,12 @@ const CardComponent = ({
 
   const handleMoreOptions = () => {
     setShowMoreOptionsDropdown(!showMoreOptionsDropdown);
+    setIsOpenDatePicker(false);
   };
 
   const onMoreOptionsDropdownClick = (dropdown, item) => {
     setIsLabelDropdownOpen(true);
+    setIsOpenDatePicker(false);
   };
 
   const handleLabelChange = (e) => {
@@ -191,6 +196,11 @@ const CardComponent = ({
     }
   };
 
+  const handleDateTimeChange = (date) => {
+    // dateTimeChange()
+    console.log(date, "klhlkhklhkhklhkl");
+  };
+
   return (
     <div
       className={`grid__item ${selectedNotes[item?.id] ? `selected` : ``}`}
@@ -216,17 +226,36 @@ const CardComponent = ({
         </div>
       </div>
 
-      <div className="card-body" onClick={() => handleModalOpen(item)}>
+      <div
+        className="card-body"
+        onClick={() => {
+          handleModalOpen(item);
+          setIsOpenDatePicker(false);
+        }}
+      >
         <p className="card-text">{item?.content}</p>
       </div>
 
       {!isTrash && (
         <div className="card-actions">
           <div className="card-action-item">
-            <ReminderIcon />
+            {!isOpenDatePicker && (
+              <ReminderIcon
+                onClick={() => setIsOpenDatePicker(!isOpenDatePicker)}
+              />
+            )}
+
+            {isOpenDatePicker && (
+              <DatePicker
+                dateTimeChange={handleDateTimeChange}
+                dateTimeVal={dateTimeVal}
+                setIsOpenDatePicker={setIsOpenDatePicker}
+              />
+            )}
           </div>
           <div className="card-action-item">
-            <ColorIcon onClick={handleSketchPicker} />
+            {!isOpenDatePicker && <ColorIcon onClick={handleSketchPicker} />}
+
             <ColorPickerComponent
               item={item}
               showColorPicker={showColorPicker}
@@ -235,13 +264,13 @@ const CardComponent = ({
             />
           </div>
           <div className="card-action-item">
-            <PinIcon onClick={handlePinSelected} />
+            {!isOpenDatePicker && <PinIcon onClick={handlePinSelected} />}
           </div>
           <div className="card-action-item">
-            <TrashIcon onClick={handleDeleteNotes} />
+            {!isOpenDatePicker && <TrashIcon onClick={handleDeleteNotes} />}
           </div>
           <div className="card-action-item">
-            <ThreeDotsIcon onClick={handleMoreOptions} />
+            {!isOpenDatePicker && <ThreeDotsIcon onClick={handleMoreOptions} />}
             <Dropdown
               item={item}
               showMoreOptionsDropdown={showMoreOptionsDropdown}

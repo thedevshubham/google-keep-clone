@@ -191,7 +191,7 @@ p.card-text {
 
 .grid__item {
   position: relative;
-  cursor: pointer;
+  // cursor: pointer;
   padding: 10px;
   border-radius: 5px;
   // overflow: hidden;
@@ -225,6 +225,7 @@ p.card-text {
 }
 
 .card-body {
+  cursor: pointer;
   margin-bottom: 10px;
 }
 
@@ -261,6 +262,7 @@ p.card-text {
   display: flex;
   justify-content: start;
   position: relative;
+  cursor: pointer;
   // z-index: 1;
 }
 
