@@ -11,7 +11,6 @@ Steps to start on local env:
 * Run **npm install** on client and server.
 * Run **npm start** on client and server.
 
-<img width="1728" alt="image" src="https://user-images.githubusercontent.com/46281655/229298835-3710e338-7324-49a3-81b0-4eeb924f602c.png">
 <img width="1728" alt="image" src="https://user-images.githubusercontent.com/46281655/236611830-5e9caa13-6565-49e9-99c3-a8f99d1e5dad.png">
 <img width="1727" alt="image" src="https://user-images.githubusercontent.com/46281655/236611872-b9e6fe2d-914a-4b7f-b051-f4913d5ed74c.png">
 <img width="1728" alt="image" src="https://user-images.githubusercontent.com/46281655/236611914-891e938a-7237-49fd-966b-de9088ca0674.png">
