@@ -2,6 +2,7 @@
 Google Keep Notes
 
 ### A client and server model to feed real-time notes.
+#### Using graphql subscriptions, pub sub and web sockets.
 
 * Client: React Js
 * Server: Graphql
