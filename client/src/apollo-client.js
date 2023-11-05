@@ -3,13 +3,15 @@ import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { createClient } from "graphql-ws";
 
+export const baseURL = process.env.REACT_APP_GOOGLE_KEEP_SERVER_URL;
+
 const httpLink = new HttpLink({
-  uri: "http://localhost:4000/graphql",
+  uri: `${baseURL}/graphql`,
 });
 
 const wsLink = new GraphQLWsLink(
   createClient({
-    url: "ws://localhost:4000/graphql",
+    uri: `${baseURL}/graphql`,
   })
 );
 
